@@ -1,0 +1,4 @@
+module.exports = {
+	'secret': '', // passphrase for the application to create and varify JWT
+	'database': '' // URI to the modulus.io or local mongodb database
+}
