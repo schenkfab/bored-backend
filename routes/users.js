@@ -21,9 +21,16 @@ router.get('/setup', function(req, res) {
 	})
 });
 
+router.put('/users', function(req, res) {
+	// Add a new user
+});
+
 router.get('/users', authentication.valid, function(req, res) {
 	User.find({}, function(err, users) {
 		if (err) throw err;
+
+		// MongoDb ObjectId of the current user
+		console.log(req.decoded._doc._id);
 
 		res.json(users);
 	});
