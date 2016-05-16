@@ -6,7 +6,7 @@ var config = require('../app/config');
 
 var authentication = require('../app/middleware/authentication');
 
-router.get('/setup', function(req, res) {
+router.get('/users/setup', function(req, res) {
 	var admin = new User({
 		name: 'Admin',
 		password: 'admin',

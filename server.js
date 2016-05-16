@@ -10,6 +10,7 @@ var config = require('./app/config');
 
 var usersRoutes = require('./routes/users');
 var messagesRoutes = require('./routes/messages');
+var mockRoutes = require('./routes/mock');
 
 // Configuration
 var port = process.env.PORT || 8080;
@@ -26,6 +27,7 @@ app.use(morgan('dev'));
 // API routes
 app.use('/api/v1/', usersRoutes);
 app.use('/api/v1/', messagesRoutes);
+app.use('/api/v1/', mockRoutes);
 
 // Start server
 app.listen(port);
