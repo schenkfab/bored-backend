@@ -25,7 +25,7 @@ router.put('/users', function(req, res) {
 });
 
 router.get('/users', authentication.valid, function(req, res) {
-	User.find({name: req.body.name}, function(err, users) {
+	User.find({name: (new RegExp(req.body.name, 'i'))}, function(err, users) {
 		if (err) throw err;
 
 		// MongoDb ObjectId of the current user

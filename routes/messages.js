@@ -16,7 +16,20 @@ router.get('/messages', authentication.valid, function(req, res) {
 	});
 });
 
-router.put('/messages', authentication.valid, function(req, res) {
+router.put('/messages/:messageId', authentication.valid, function(req, res) {
+	// update the message with ObjectId: messageId
+	console.log(req.params.messageId);
+	Message.findById(req.params.messageId, function (err, message) {
+		if (err) throw err;
+		message.isRead = req.body.isRead;
+		message.save(function (err) {
+			if (err) throw err;
+			res.send(message);
+		});
+	});
+});
+
+router.post('/messages', authentication.valid, function(req, res) {
 	// send a message
 	var message = new Message({
 		sender: req.decoded._doc._id,

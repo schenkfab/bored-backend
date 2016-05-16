@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 // get all packages we need
 var express = require('express');
 var app = express();
@@ -9,6 +9,7 @@ var mongoose = require('mongoose');
 var config = require('./app/config');
 
 var usersRoutes = require('./routes/users');
+var messagesRoutes = require('./routes/messages');
 
 // Configuration
 var port = process.env.PORT || 8080;
@@ -24,6 +25,7 @@ app.use(morgan('dev'));
 
 // API routes
 app.use('/api/v1/', usersRoutes);
+app.use('/api/v1/', messagesRoutes);
 
 // Start server
 app.listen(port);
