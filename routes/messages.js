@@ -35,6 +35,25 @@ router.put('/messages/:messageId', authentication.valid, (req, res) => {
   });
 });
 
+router.post('/messages/:messageId/reply', authentication.valid, (req, res) => {
+  Message.findById(req.params.messageId, (err, message) => {
+    if (err) throw err;
+
+    const reply = new Message({
+      sender: req.decoded._doc._id,
+      receiver: message.sender,
+      sentOn: (new Date()),
+      message: req.body.message,
+      isRead: false,
+    });
+    reply.save((error) => {
+      if (error) throw error;
+
+      res.json({ success: true });
+    });
+  });
+});
+
 router.post('/messages', authentication.valid, (req, res) => {
   // send a message
   const message = new Message({
@@ -42,7 +61,7 @@ router.post('/messages', authentication.valid, (req, res) => {
     receiver: req.body.receiver,
     sentOn: (new Date()),
     message: req.body.message,
-    isRead: req.body.receiver,
+    isRead: false,
   });
 
   message.save((err) => {
