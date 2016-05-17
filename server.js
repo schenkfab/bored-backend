@@ -1,24 +1,23 @@
-'use strict';
 // get all packages we need
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
-var morgan = require('morgan');
-var mongoose = require('mongoose');
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
+const mongoose = require('mongoose');
 
-var config = require('./app/config');
+const config = require('./app/config');
 
-var usersRoutes = require('./routes/users');
-var messagesRoutes = require('./routes/messages');
-var mockRoutes = require('./routes/mock');
+const usersRoutes = require('./routes/users');
+const messagesRoutes = require('./routes/messages');
+const mockRoutes = require('./routes/mock');
 
 // Configuration
-var port = process.env.PORT || 8080;
+const port = process.env.PORT || 8080;
 mongoose.connect(config.database);
 app.set('superSecret', config.secret);
 
 // body parser
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // morgan
@@ -31,4 +30,4 @@ app.use('/api/v1/', mockRoutes);
 
 // Start server
 app.listen(port);
-console.log('Server running on port:' + port);
+console.log(`Server running on port: ${port}`);
