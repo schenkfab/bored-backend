@@ -1,4 +1,4 @@
-module.exports = {
+/*module.exports = {
     "env": {
         "browser": true,
         "es6": true,
@@ -28,4 +28,8 @@ module.exports = {
     "module": true,
     "inject": true
   }
-};
+};*/
+
+module.exports = {
+  "extends": "airbnb"
+}
