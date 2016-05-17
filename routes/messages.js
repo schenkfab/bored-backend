@@ -1,52 +1,63 @@
-'use strict';
+/* eslint no-underscore-dangle: ["error", { "allow": ["_doc", "_id"] }] */
 
-var express = require('express');
-var router = express.Router();
-var authentication = require('../app/middleware/authentication');
-var Message = require('../app/models/message');
+const express = require('express');
+const router = express.Router();
+const authentication = require('../app/middleware/authentication');
+const Message = require('../app/models/message');
 
-router.get('/messages', authentication.valid, function(req, res) {
-	// get the current users messages
-	let currentUser = req.decoded._doc._id;
-	Message.find({receiver: currentUser}, function (err, messages) {
-		if (err) {
-			throw err;
-		}
-		res.json(messages);
-	});
+router.get('/messages', authentication.valid, (req, res) => {
+  // get the current users messages
+  Message.find({ receiver: req.decoded._doc._id }, (err, messages) => {
+    if (err) {
+      throw err;
+    }
+    res.json(messages);
+  });
 });
 
-router.put('/messages/:messageId', authentication.valid, function(req, res) {
-	// update the message with ObjectId: messageId
-	console.log(req.params.messageId);
-	Message.findById(req.params.messageId, function (err, message) {
-		if (err) throw err;
-		message.isRead = req.body.isRead;
-		message.save(function (err) {
-			if (err) throw err;
-			res.send(message);
-		});
-	});
+router.put('/messages/:messageId', authentication.valid, (req, res) => {
+  // update the message with ObjectId: messageId
+  Message.findById(req.params.messageId, (err, message) => {
+    if (err) throw err;
+
+    const currentMessage = message;
+    currentMessage.isRead = req.body.isRead;
+    currentMessage.save((error) => {
+      if (error) throw error;
+      res.send(message);
+    });
+
+    /* message.isRead = req.body.isRead;
+    message.save((error) => {
+      if (error) throw error;
+      res.send(message);
+    });*/
+  });
 });
 
-router.post('/messages', authentication.valid, function(req, res) {
-	// send a message
-	var message = new Message({
-		sender: req.decoded._doc._id,
-		receiver: req.body.receiver,
-		sentOn: (new Date()),
-		message: req.body.message,
-		isRead: req.body.receiver
-	});
+router.post('/messages', authentication.valid, (req, res) => {
+  // send a message
+  const message = new Message({
+    sender: req.decoded._doc._id,
+    receiver: req.body.receiver,
+    sentOn: (new Date()),
+    message: req.body.message,
+    isRead: req.body.receiver,
+  });
 
-	message.save(function(err) {
-		if (err) throw err;
-		res.json({ success: true });
-	});
+  message.save((err) => {
+    if (err) throw err;
+    res.json({ success: true });
+  });
 });
 
-router.delete('/messages/:messageId', authentication.valid, function(req, res) {
-	// delete the message
+router.delete('/messages/:messageId', authentication.valid, (req, res) => {
+  // delete the message
+  Message.remove({ _id: req.params.messageId }, (err) => {
+    if (err) throw err;
+
+    res.json({ success: true });
+  });
 });
 
 module.exports = router;
