@@ -11,6 +11,15 @@ const usersRoutes = require('./routes/users');
 const messagesRoutes = require('./routes/messages');
 const mockRoutes = require('./routes/mock');
 
+// CORS middleware
+const allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+    next();
+};
+
 // Configuration
 const port = process.env.PORT || 8080;
 mongoose.connect(config.database);
@@ -19,6 +28,7 @@ app.set('superSecret', config.secret);
 // body parser
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(allowCrossDomain);
 
 // morgan
 app.use(morgan('dev'));
