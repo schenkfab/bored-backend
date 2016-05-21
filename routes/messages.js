@@ -7,7 +7,10 @@ const Message = require('../app/models/message');
 
 router.get('/messages', authentication.valid, (req, res) => {
   // get the current users messages
-  Message.find({ receiver: req.decoded._doc._id }, (err, messages) => {
+  Message.find({ receiver: req.decoded._doc._id })
+  .populate('sender')
+  .populate('receiver')
+  .exec((err, messages) => {
     if (err) {
       throw err;
     }
