@@ -22,18 +22,7 @@ router.get('/users/setup', (req, res) => {
 });
 
 router.put('/users', (req, res) => {
-  // Add a new user
-  const user = new User({
-    name: req.body.name,
-    password: req.body.password,
-    admin: false,
-  });
-
-  user.save((err) => {
-    if (err) throw err;
-
-    res.json({ success: true });
-  });
+  
 });
 
 router.get('/users', authentication.valid, (req, res) => {
@@ -48,8 +37,17 @@ router.get('/users', authentication.valid, (req, res) => {
 });
 
 router.post('/register', (req, res) => {
+  // Add a new user
   const user = new User({
-    
+    name: req.body.name,
+    password: req.body.password,
+    admin: false,
+  });
+
+  user.save((err, usr) => {
+    if (err) throw err;
+
+    res.json(usr);
   });
 });
 
