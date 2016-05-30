@@ -21,14 +21,9 @@ router.get('/users/setup', (req, res) => {
   });
 });
 
-router.put('/users', (req, res) => {
-  
-});
-
 router.get('/users', authentication.valid, (req, res) => {
-  User.find({ name: (new RegExp(req.body.name, 'i')) }, (err, users) => {
+  User.find({ name: (new RegExp(req.query.name, 'i')) }, (err, users) => {
     if (err) throw err;
-
     // MongoDb ObjectId of the current user
     // console.log(req.decoded._doc._id);
 

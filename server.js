@@ -10,14 +10,15 @@ const config = require('./app/config');
 const usersRoutes = require('./routes/users');
 const messagesRoutes = require('./routes/messages');
 const mockRoutes = require('./routes/mock');
+const contactsRoutes = require('./routes/contact');
 
 // CORS middleware
 const allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
 
-    next();
+  next();
 };
 
 // Configuration
@@ -37,6 +38,7 @@ app.use(morgan('dev'));
 app.use('/api/v1/', usersRoutes);
 app.use('/api/v1/', messagesRoutes);
 app.use('/api/v1/', mockRoutes);
+app.use('/api/v1/', contactsRoutes);
 
 // Start server
 app.listen(port);

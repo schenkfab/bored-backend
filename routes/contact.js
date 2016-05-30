@@ -19,7 +19,7 @@ router.get('/contacts', authentication.valid, (req, res) => {
   });
 });
 
-router.post('/contact', authentication.valid, (req, res) => {
+router.post('/contacts', authentication.valid, (req, res) => {
   Contact.findOneAndUpdate({
     user: req.decoded._doc._id,
   }, {
@@ -27,7 +27,10 @@ router.post('/contact', authentication.valid, (req, res) => {
   }, {
     new: true,
     upsert: true,
-  }, (error, contact) => {
+  }).populate('contacts')
+  .exec((error, contact) => {
     res.json(contact);
   });
 });
+
+module.exports = router;
