@@ -83,9 +83,10 @@ router.post('/messages', authentication.valid, (req, res) => {
     isRead: false,
   });
 
-  message.save((err) => {
+  message.save((err, messages) => {
     if (err) throw err;
-    res.json({ success: true });
+
+    res.json(messages);
   });
 });
 
