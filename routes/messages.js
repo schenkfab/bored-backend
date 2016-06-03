@@ -18,6 +18,22 @@ router.get('/messages', authentication.valid, (req, res) => {
   });
 });
 
+router.get('/messages/:userId', authentication.valid, (req, res) => {
+  // get the current users messages
+  Message.find({ $or: [
+    { receiver: req.decoded._doc._id, sender: req.params.userId },
+    { sender: req.decoded._doc._id, receiver: req.params.userId },
+  ]})
+  .populate('sender')
+  .populate('receiver')
+  .exec((err, messages) => {
+    if (err) {
+      throw err;
+    }
+    res.json(messages);
+  });
+});
+
 router.put('/messages/:messageId', authentication.valid, (req, res) => {
   // update the message with ObjectId: messageId
   Message.findById(req.params.messageId, (err, message) => {
