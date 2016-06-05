@@ -8,6 +8,7 @@ const Message = require('../app/models/message');
 router.get('/messages', authentication.valid, (req, res) => {
   // get the current users messages
   Message.find({ receiver: req.decoded._doc._id })
+  .sort('sentOn')
   .populate('sender')
   .populate('receiver')
   .exec((err, messages) => {
@@ -23,7 +24,8 @@ router.get('/messages/:userId', authentication.valid, (req, res) => {
   Message.find({ $or: [
     { receiver: req.decoded._doc._id, sender: req.params.userId },
     { sender: req.decoded._doc._id, receiver: req.params.userId },
-  ]})
+  ] })
+  .sort('sentOn')
   .populate('sender')
   .populate('receiver')
   .exec((err, messages) => {
