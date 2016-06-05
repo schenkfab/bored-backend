@@ -56,6 +56,20 @@ router.put('/messages/:messageId', authentication.valid, (req, res) => {
   });
 });
 
+router.put('/messages/:messageId/isread', authentication.valid, (req, res) => {
+  // Set the object to isRead
+  Message.findById(req.params.messageId, (err, message) => {
+    if (err) throw err;
+
+    const currentMessage = message;
+    currentMessage.isRead = true;
+    currentMessage.save((error, msg) => {
+      if (error) throw error;
+      res.send(msg);
+    });
+  });
+});
+
 router.post('/messages/:messageId/reply', authentication.valid, (req, res) => {
   Message.findById(req.params.messageId, (err, message) => {
     if (err) throw err;
