@@ -46,6 +46,13 @@ router.post('/register', (req, res) => {
   });
 });
 
+router.post('/validate', authentication.valid, (req, res) => {
+  res.json({
+    success: true,
+    message: 'token is valid',
+  });
+});
+
 router.post('/authenticate', (req, res) => {
   // find the user
   User.findOne({
