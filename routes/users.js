@@ -46,6 +46,22 @@ router.post('/register', (req, res) => {
   });
 });
 
+router.put('/endpoint/:userId', authentication.valid, (req, res) => {
+  // Add an endpoint to the object.
+  User.findById(req.params.userId, (err, usr) => {
+    if (err) throw err;
+
+    const currentUser = usr;
+
+    currentUser.endpoint = req.body.endpoint;
+    currentUser.save((error) => {
+      if (error) throw error;
+
+      res.send(usr);
+    });
+  });
+});
+
 router.post('/validate', authentication.valid, (req, res) => {
   res.json({
     success: true,
