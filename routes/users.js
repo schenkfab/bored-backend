@@ -93,6 +93,7 @@ router.post('/authenticate', (req, res) => {
         res.json({
           success: true,
           message: 'Enjoy your token!',
+          userId: user._id,
           token,
         });
       }
