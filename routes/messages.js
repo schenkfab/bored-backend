@@ -150,7 +150,7 @@ router.post('/messages', authentication.valid, (req, res) => {
   message.save((err, messages) => {
     if (err) throw err;
 
-    sendPush(req.body.receiver._id)
+    sendPush(req.body.receiver)
       .then((result) => {
         res.json(messages);
       })
