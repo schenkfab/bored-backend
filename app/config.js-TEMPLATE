@@ -2,4 +2,5 @@ module.exports = {
 	'secret': '', // passphrase for the application to create and varify JWT
 	'database': '', // URI to the modulus.io or local mongodb database
 	'gcm_key': '', // Firebase Key for Messaging
+	'frontend': '', // http://localhost:3000 or whatever url you are using
 }
