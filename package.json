@@ -10,7 +10,8 @@
     "express": "~4.13.1",
     "jsonwebtoken": "^6.2.0",
     "mongoose": "^4.4.17",
-    "morgan": "~1.6.1"
+    "morgan": "~1.6.1",
+    "request": "^2.74.0"
   },
   "devDependencies": {
     "eslint": "^2.10.2",

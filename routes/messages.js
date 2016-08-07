@@ -4,6 +4,9 @@ const express = require('express');
 const router = express.Router();
 const authentication = require('../app/middleware/authentication');
 const Message = require('../app/models/message');
+const User = require('../app/models/user');
+const request = require('request');
+const config = require('../app/config');
 
 router.get('/messages', authentication.valid, (req, res) => {
   // get the current users messages
@@ -33,6 +36,33 @@ router.get('/messages/:userId', authentication.valid, (req, res) => {
       throw err;
     }
     res.json(messages);
+  });
+});
+
+router.get('/push/:userId', (req, res) => {
+  User.findById(req.params.userId, (err, usr) => {
+    if (err) throw err;
+
+    const registrationId = usr.endpoint.split('/')[usr.endpoint.split('/').length - 1];
+
+    const options = {
+      uri: 'https://android.googleapis.com/gcm/send',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'key=' + config.gcm_key,
+      },
+      json: {
+        registration_ids: [registrationId],
+      },
+    };
+
+    request.post(options, (error, response, body) => {
+      if (body.success > 0) {
+        res.send({ success: true });
+      } else {
+        res.send({ success: false, error: body.results });
+      }
+    });
   });
 });
 
