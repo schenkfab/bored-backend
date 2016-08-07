@@ -39,31 +39,43 @@ router.get('/messages/:userId', authentication.valid, (req, res) => {
   });
 });
 
-router.get('/push/:userId', (req, res) => {
-  User.findById(req.params.userId, (err, usr) => {
-    if (err) throw err;
+const sendPush = (userId) => {
+  return new Promise((resolve, reject) => {
+    User.findById(userId, (err, usr) => {
+      if (err) throw err;
 
-    const registrationId = usr.endpoint.split('/')[usr.endpoint.split('/').length - 1];
+      const registrationId = usr.endpoint.split('/')[usr.endpoint.split('/').length - 1];
 
-    const options = {
-      uri: 'https://android.googleapis.com/gcm/send',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'key=' + config.gcm_key,
-      },
-      json: {
-        registration_ids: [registrationId],
-      },
-    };
+      const options = {
+        uri: 'https://android.googleapis.com/gcm/send',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'key=' + config.gcm_key,
+        },
+        json: {
+          registration_ids: [registrationId],
+        },
+      };
 
-    request.post(options, (error, response, body) => {
-      if (body.success > 0) {
-        res.send({ success: true });
-      } else {
-        res.send({ success: false, error: body.results });
-      }
+      request.post(options, (error, response, body) => {
+        if (body.success > 0) {
+          resolve({ success: true });
+        } else {
+          reject({ success: false, error: body.results });
+        }
+      });
     });
   });
+};
+
+router.get('/push/:userId', (req, res) => {
+  sendPush(req.params.userId)
+    .then((result) => {
+      res.json(result);
+    })
+    .catch((e) => {
+      res.json(e);
+    });
 });
 
 router.put('/messages/:messageId', authentication.valid, (req, res) => {
@@ -114,7 +126,13 @@ router.post('/messages/:messageId/reply', authentication.valid, (req, res) => {
     reply.save((error) => {
       if (error) throw error;
 
-      res.json({ success: true });
+      sendPush(message.sender._id)
+        .then((result) => {
+          res.json({ success: true });
+        })
+        .catch((e) => {
+          res.json(e);
+        });
     });
   });
 });
@@ -132,7 +150,13 @@ router.post('/messages', authentication.valid, (req, res) => {
   message.save((err, messages) => {
     if (err) throw err;
 
-    res.json(messages);
+    sendPush(req.body.receiver._id)
+      .then((result) => {
+        res.json(messages);
+      })
+      .catch((e) => {
+        res.json(e);
+      });
   });
 });
 
